@@ -21,9 +21,9 @@ namespace permutari
 
                 int[] permutation = new int[matrixSize];
                 GetAllPermutations(permutation, 0);
-
+                
                 long determinant = GetDeterminant(mat);
-                Console.WriteLine($"Determinantul pentru aceasta matrice este: {determinant}");
+                Console.WriteLine($"This matrix determinant is equal to: {determinant}");
             }
             catch(Exception ex)
             {
@@ -33,23 +33,24 @@ namespace permutari
 
         private static void ReadMatrixSize()
         {
-            Console.Write("dati dimensiunea matricei (0<d<20) (nr de linii si coloane): ");
+            const int maxSize = 10;
+            Console.Write($"Give matrix size (0<d<{maxSize + 1}): ");
             bool ok;
             do
             {
                 ok = true;
                 matrixSize = int.Parse(Console.ReadLine());
-                if (matrixSize < 0 || matrixSize >= 20)
+                if (matrixSize < 0 || matrixSize > maxSize)
                 {
                     ok = false;
-                    Console.Write($"{matrixSize} nu este o dimensiune acceptata, reintroduceti dimensiunea(0<d<20): ");
+                    Console.Write($"{matrixSize} value is not suitable for the matrix size, chose other value (0<d<{maxSize + 1}): ");
                 }
             } while (!ok);
         }
 
         private static void ReadMatrix(int[,] matrix)
         {
-            Console.WriteLine($"scrieti o matrice de {matrixSize} x {matrixSize} elemente, separate prin spatii si cu trecere pe linie noua:");
+            Console.WriteLine($"Write all the matrix elements (separated only by white spaces and new lines) ({matrixSize} x {matrixSize} matrix):");
             for (int i = 0; i < matrixSize; i++)
             {
                 var line = Console.ReadLine().Split(' ');
@@ -109,12 +110,9 @@ namespace permutari
             return true;
         }
 
-        private static void StorePermutation(List<List<int>> storedPermutations, int[] perm)
+        private static void StorePermutation(List<List<int>> storedPermutations, int[] permutation)
         {
-            List<int> row = new List<int>();
-            for (int j = 0; j < matrixSize; j++)
-                row.Add(perm[j]);
-            storedPermutations.Add(row);
+            storedPermutations.Add(permutation.ToList());
         }
     }
 }
