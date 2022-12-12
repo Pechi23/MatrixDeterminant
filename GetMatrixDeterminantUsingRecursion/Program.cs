@@ -16,11 +16,10 @@ namespace MatrixDeterminant
         {
             try
             {
-                int matrixSize=0;
-                ReadMatrixSize(ref matrixSize);
-                List<List<int>> mat = new List<List<int>>();
-                ReadMatrix(mat,matrixSize);
-                //mat = GenerateNewRandomMat(matrixSize,10);
+                int matrixSize = ReadMatrixSize();
+                List<List<int>> mat = ReadMatrix(matrixSize);
+
+                //List<List<int>>  mat = GenerateNewRandomMat(matrixSize,10);
                 //WriteMatrix(mat);
 
                 BigInteger determinant = GetDeterminantRecursive(mat);
@@ -38,23 +37,32 @@ namespace MatrixDeterminant
             for (int i = 0; i < mat.Count; i++)
                 Console.WriteLine(String.Join(" ", mat[i]));
         }
-
+        /// <summary>
+        /// returns a matrix of size matrixSize x matrixSize with random generated elements between -limit and limit
+        /// </summary>
+        /// <param name="matrixSize"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
         private static List<List<int>> GenerateNewRandomMat(int matrixSize,int limit)
         {
             List<List<int>> newMat = new List<List<int>>();
+
             for(int i=0;i<matrixSize;i++)
             {
                 List<int> row = new List<int>();
                 for (int j = 0; j < matrixSize; j++)
-                    row.Add(rnd.Next(-limit, limit));
+                    row.Add(rnd.Next(-limit, limit+1));
                 newMat.Add(row);
             }
+
             return newMat;
         }
 
-        private static void ReadMatrixSize(ref int matrixSize)
+        private static int ReadMatrixSize()
         {
             const int maxSize = 12; //for matrix size 12 it takes between 3 and 5 minutes to compute the determinant
+            int matrixSize;
+
             Console.Write($"Give the matrix size (0<d<{maxSize + 1}): ");
             bool ok;
             do
@@ -67,19 +75,25 @@ namespace MatrixDeterminant
                     Console.Write($"{matrixSize} value is not suitable for the matrix size, chose other value (0<d<{maxSize + 1}): ");
                 }
             } while (!ok);
+
+            return matrixSize;
         }
 
-        private static void ReadMatrix(List<List<int>> matrix,int matrixSize)
+        private static List<List<int>> ReadMatrix(int matrixSize)
         {
             Console.WriteLine($"Write all the matrix elements (separated only by white spaces and new lines) ({matrixSize} x {matrixSize} matrix):");
+            List<List<int>> newMat = new List<List<int>>();
+
             for (int i = 0; i < matrixSize; i++)
             {
                 var line = Console.ReadLine().Split(' ');
                 List<int> row = new List<int>(); 
                 foreach (var el in line)
                     row.Add(int.Parse(el));
-                matrix.Add(row);
+                newMat.Add(row);
             }
+
+            return newMat;
         }
         /// <summary>
         /// recursive method for compute the matrix determinant
@@ -101,7 +115,7 @@ namespace MatrixDeterminant
         }
 
         /// <summary>
-        /// receive a matrix and returns the minor of this matrix Mij = GetMinor(matrix,i,j); 
+        /// receives a matrix and returns the minor of this matrix Mij = GetMinor(matrix,i,j); 
         /// </summary>
         /// <param name="matrix"></param>
         /// <param name="ignoreRow"></param>
@@ -110,6 +124,7 @@ namespace MatrixDeterminant
         private static List<List<int>> GetMinor(List<List<int>> matrix, int ignoreRow, int ignoreColumn)
         {
             List<List<int>> Minor = new List<List<int>>();
+
             for (int i = 0; i < matrix.Count; i++)
             {
                 List<int> row = new List<int>();
